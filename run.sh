@@ -10,7 +10,7 @@ fi
 eval set -- "${TEMP}"
 
 GPU_ID=0
-BATCH_SIZE=2
+BATCH_SIZE=4
 INPUT_PATH="/"
 OUTPUT_PATH="examples/results/"
 VIDEO_FILE=""
@@ -62,7 +62,7 @@ fi
 echo 'generating bbox from Faster RCNN...'
 
 cd ${WORK_PATH}"/human-detection/tools"
-CUDA_VISIBLE_DEVICES=${GPU_ID} python2 demo-alpha-pose.py --inputlist=${LIST_FILE} --inputpath=${INPUT_PATH} --outputpath=${OUTPUT_PATH} --mode=${MODE}
+CUDA_VISIBLE_DEVICES=${GPU_ID} python demo-alpha-pose.py --inputlist=${LIST_FILE} --inputpath=${INPUT_PATH} --outputpath=${OUTPUT_PATH} --mode=${MODE}
 
 # echo $INPUT_PATH
 # echo $OUTPUT_PATH
@@ -72,30 +72,30 @@ CUDA_VISIBLE_DEVICES=${GPU_ID} python2 demo-alpha-pose.py --inputlist=${LIST_FIL
 echo 'pose estimation with RMPE...'
 
 cd ${WORK_PATH}"/predict"
-if [ "$MODE" = "accurate" ]; then
-    CUDA_VISIBLE_DEVICES=${GPU_ID} th main-alpha-pose-4crop.lua predict ${INPUT_PATH} ${OUTPUT_PATH} ${GPU_NUM} ${BATCH_SIZE} ${DATASET} 
-else
-    CUDA_VISIBLE_DEVICES=${GPU_ID} th main-alpha-pose.lua predict ${INPUT_PATH} ${OUTPUT_PATH} ${GPU_NUM} ${BATCH_SIZE} ${DATASET} 
-fi
+#if [ "$MODE" = "accurate" ]; then
+    CUDA_VISIBLE_DEVICES=${GPU_ID} /home/keze/torch/install/bin/th main-alpha-pose-4crop.lua predict ${INPUT_PATH} ${OUTPUT_PATH} ${GPU_NUM} ${BATCH_SIZE} ${DATASET} 
+#else
+#    CUDA_VISIBLE_DEVICES=${GPU_ID} /home/keze/torch/install/bin/th main-alpha-pose.lua predict ${INPUT_PATH} ${OUTPUT_PATH} ${GPU_NUM} ${BATCH_SIZE} ${DATASET} 
+#fi
 
 cd ${WORK_PATH}"/predict/json"
 if [ "$DATASET" = "COCO" ]; then
-    python2 parametric-pose-nms-COCO.py --outputpath ${OUTPUT_PATH} --sep ${SEP} --format ${FORMAT}
+    python parametric-pose-nms-COCO.py --outputpath ${OUTPUT_PATH} --sep ${SEP} --format ${FORMAT}
 else
-    python2 parametric-pose-nms-MPII.py --outputpath ${OUTPUT_PATH} --sep ${SEP} --format ${FORMAT}
+    python parametric-pose-nms-MPII.py --outputpath ${OUTPUT_PATH} --sep ${SEP} --format ${FORMAT}
 fi
 
-if $VIS; then
-    echo 'visualization...'
-    if ! [ -e ${OUTPUT_PATH}"/RENDER" ]; then
-        mkdir ${OUTPUT_PATH}"/RENDER"
-    fi
-    python2 json-video.py --outputpath ${OUTPUT_PATH} --inputpath ${INPUT_PATH}
-    if [ -n "$VIDEO_FILE" ]; then
-        echo 'rendering video...'
-        ffmpeg -r 25 -i ${OUTPUT_PATH}"/RENDER/%05d.jpg" -vcodec libx264 -y -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" ${OUTPUT_PATH}"/result_MS.mp4"
-    fi
-fi
+#if $VIS; then
+#    echo 'visualization...'
+#    if ! [ -e ${OUTPUT_PATH}"/RENDER" ]; then
+#        mkdir ${OUTPUT_PATH}"/RENDER"
+#    fi
+#    python json-video.py --outputpath ${OUTPUT_PATH} --inputpath ${INPUT_PATH}
+#    if [ -n "$VIDEO_FILE" ]; then
+#        echo 'rendering video...'
+#        ffmpeg -r 25 -i ${OUTPUT_PATH}"/RENDER/%05d.jpg" -vcodec libx264 -y -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" ${OUTPUT_PATH}"/result_MS.mp4"
+#    fi
+#fi
 
 # delete generated video frames
 cd ${WORK_PATH}

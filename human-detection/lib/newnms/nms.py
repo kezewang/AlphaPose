@@ -1,5 +1,8 @@
 import numpy as np
 
+import sys
+sys.path.append('/home/keze/Codes/AlphaPose/human-detection/lib/newnms/')
+
 from cpu_nms import cpu_nms, cpu_soft_nms
 from gpu_nms import gpu_nms
 

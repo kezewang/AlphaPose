@@ -1,7 +1,5 @@
-from __future__ import print_function
 import h5py
 import numpy as np
-from six.moves import xrange
 import sys
 import mpii
 
@@ -22,7 +20,7 @@ with h5py.File('../../data/mpii/annot/multi-idxs.h5','r') as f:
 imgnameRef = mpii.annot['annolist'][0][0][0]['image'][:]
 
 for idx in xrange(mpii.nimages):
-    print("\r",idx, end=' ')
+    print "\r",idx,
     sys.stdout.flush()
 
     for person in xrange(mpii.numpeople(idx)):
@@ -60,7 +58,7 @@ for idx in xrange(mpii.nimages):
                 else:   # Training image (something missing in annot)
                     annot['istrain'] += [2]
 
-print("")
+print ""
 
 with h5py.File('mpii-annot.h5','w') as f:
     f.attrs['name'] = 'mpii'

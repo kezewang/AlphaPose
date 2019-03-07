@@ -3,4 +3,4 @@ pip install --user tqdm
 pip install --user opencv-python
 pip install --user h5py
 
-luarocks install hdf5
+sudo luarocks install hdf5

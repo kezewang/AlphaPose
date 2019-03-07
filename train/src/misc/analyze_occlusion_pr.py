@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from pypose import ref
 import h5py
 import numpy as np
-from six.moves import xrange
 
 a = ref.load('mpii','valid')
 

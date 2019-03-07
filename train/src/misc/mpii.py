@@ -1,7 +1,5 @@
 import scipy.io
 import scipy.misc
-from six import text_type
-from six.moves import xrange
 import numpy as np
 
 # Load in annotations
@@ -70,7 +68,7 @@ def partinfo(idx, person, part):
                 if 'is_visible' in parts_info.dtype.fields:
                     v = parts_info[i]['is_visible']
                     v = v[0][0] if len(v) > 0 else 1
-                    if type(v) is text_type:
+                    if type(v) is unicode:
                         v = int(v)
                 else:
                     v = 1

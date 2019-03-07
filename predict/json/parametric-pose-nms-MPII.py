@@ -7,7 +7,6 @@ Created on Wed Nov  9 10:58:09 2016
 
 import json
 import numpy as np
-from six.moves import xrange
 import h5py
 import os
 import argparse
@@ -20,7 +19,7 @@ def write_nms_json(outputpath, sep, form):
      
     results = []
     bbox_cnt = 0
-    for i in xrange(len(pred_file)):
+    for i in range(len(pred_file)):
         keypoints = []
         score = []
         score2 = []
@@ -29,7 +28,7 @@ def write_nms_json(outputpath, sep, form):
         result = {}
         result['image_id'] = pred_coordi[0]
         result['category_id'] = 1;
-        for n in xrange(16):
+        for n in range(16):
             keypoints.append(int(pred_coordi[2*n+1])); 
             keypoints.append(int(pred_coordi[2*n+2]));
             keypoints.append(float(pred_score[n+1]));
@@ -44,7 +43,7 @@ def write_nms_json(outputpath, sep, form):
         results.append(result)
     results_forvis = {}
     last_image_name = ' '
-    for i in xrange(len(results)):
+    for i in range(len(results)):
         imgpath = results[i]['image_id']
         if last_image_name != imgpath:
             results_forvis[imgpath] = []
@@ -124,7 +123,7 @@ def test_parametric_pose_NMS_json(delta1,delta2,mu,gamma,outputpath):
     num_human = 0
     
     #loop through every image
-    for i in xrange(len(indexs)):
+    for i in range(len(indexs)):
         index = indexs[i].split(' '); 
         img_name = index[0]; start = int(index[1])-1; end = int(index[2])-1;
         
@@ -160,7 +159,7 @@ def test_parametric_pose_NMS_json(delta1,delta2,mu,gamma,outputpath):
         assert len(merge_ids) == len(pick)
         preds_pick = preds[pick]; scores_pick = scores[pick];sizes_pick = Sizes[pick];
         num_pick = 0
-        for j in xrange(len(pick)):
+        for j in range(len(pick)):
             
             #first compute the average score of a person
             ids = np.arange(16)
@@ -184,7 +183,7 @@ def test_parametric_pose_NMS_json(delta1,delta2,mu,gamma,outputpath):
             NMS_scores.write("{}".format(img_name))
             proposal_scores.write("{}\n".format(score))
             
-            for point_id in xrange(16):
+            for point_id in range(16):
                 NMS_preds.write("\t{}\t{}".format(int(merge_poses[point_id,0]),int(merge_poses[point_id,1])))
                 NMS_scores.write("\t{}".format(merge_score[point_id]))
             NMS_preds.write("\n")
@@ -223,7 +222,7 @@ def merge_pose(refer_pose, cluster_preds, cluster_keypoint_scores, ref_dist):
         cluster_keypoint_scores = cluster_keypoint_scores[np.newaxis,:]
     if (mask.ndim == 1):
         mask = mask[np.newaxis,:]
-    for i in xrange(16):
+    for i in range(16):
         cluster_joint_scores = cluster_keypoint_scores[:,i][mask[:,i]]
         
         # pick the corresponding i's matched keyjoint locations and do an weighed sum.

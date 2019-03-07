@@ -153,6 +153,10 @@ if __name__ == '__main__':
     print(inputlist)
     if len(inputpath) and inputpath != '/':
         for root,dirs,files in os.walk(inputpath):
+            import natsort 
+            files = natsort.natsorted(files)
+            #files.reverse()
+            print(files)
             im_names=files
     elif len(inputlist):
         with open(inputlist,'r') as f:
